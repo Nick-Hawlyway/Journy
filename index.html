@@ -84,6 +84,7 @@ const PAL={
 
 /* ============ helpers ============ */
 const $=s=>document.querySelector(s);
+addEventListener('error',e=>{const l=$('#load');if(l)l.textContent='Startup error: '+e.message});
 const el=(t,x,c)=>{const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e};
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const safe=u=>{try{const x=new URL(u);return/^https?:$/.test(x.protocol)?x.href:''}catch{return''}};
@@ -185,8 +186,9 @@ addEventListener('keydown',e=>{if(e.key==='Escape'){queue.length=0;$('#pop').hid
 /* ============ ground bake (faceted mosaic) ============ */
 const ground=(()=>{
  const g=document.createElement('canvas');g.width=W.w;g.height=W.h;const x=g.getContext('2d'),r=rng(3),S=80,pt=[];
- for(let j=0;j<=W.h/S+1;j++){pt[j]=[];for(let i=0;i<=W.w/S+1;i++)pt[j][i]=[i*S+(r()-.5)*S*.7,j*S+(r()-.5)*S*.7]}
- for(let j=0;j<W.h/S+1;j++)for(let i=0;i<W.w/S+1;i++){
+ const rows=Math.ceil(W.h/S)+1,cols=Math.ceil(W.w/S)+1;
+ for(let j=0;j<=rows;j++){pt[j]=[];for(let i=0;i<=cols;i++)pt[j][i]=[i*S+(r()-.5)*S*.7,j*S+(r()-.5)*S*.7]}
+ for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
   const a=pt[j][i],b=pt[j][i+1],c=pt[j+1][i],d=pt[j+1][i+1];
   [[a,b,c],[b,d,c]].forEach(t=>P(t,sh(pal.ground[r()*4|0],.75+r()*.5),x))}
  const pc=['#1d5a6e','#2a7487','#154457','#3a8a95'];
